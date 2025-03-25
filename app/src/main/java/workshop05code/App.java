@@ -38,15 +38,19 @@ public class App {
 
         wordleDatabaseConnection.createNewDatabase("words.db");
         if (wordleDatabaseConnection.checkIfConnectionDefined()) {
-            System.out.println("Wordle created and connected.");
+            // System.out.println("Wordle created and connected.");
+            logger.log(Level.INFO, "Wordle created and connected.");
+
         } else {
-            System.out.println("Not able to connect. Sorry!");
+            // System.out.println("Not able to connect. Sorry!");
+            logger.log(Level.SEVERE, "Not able to connect. Sorry!");
             return;
         }
         if (wordleDatabaseConnection.createWordleTables()) {
-            System.out.println("Wordle structures in place.");
+            // System.out.println("Wordle structures in place.");
+            logger.log(Level.INFO, "Wordle structures in place.");
         } else {
-            System.out.println("Not able to launch. Sorry!");
+            logger.log(Level.SEVERE, "Not able to launch . Sorry!");
             return;
         }
 
@@ -55,15 +59,25 @@ public class App {
         try (BufferedReader br = new BufferedReader(new FileReader("resources/data.txt"))) {
             String line;
             int i = 1;
+            String regex = "[a-z]+";
+
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
-                wordleDatabaseConnection.addValidWord(i, line);
-                i++;
+                // System.out.println(line);
+                if (line.length() != 4 || !line.matches(regex)) {
+                    logger.log(Level.SEVERE, "{0}: is invalid", line);
+                }
+                else {
+                    logger.log(Level.INFO, "{0}: is valid", line);
+                    wordleDatabaseConnection.addValidWord(i, line);
+                    i++;
+                }
+                
             }
 
         } catch (IOException e) {
-            System.out.println("Not able to load . Sorry!");
-            System.out.println(e.getMessage());
+            // System.out.println("Not able to load . Sorry!");
+            // System.out.println(e.getMessage());
+            logger.log(Level.SEVERE, "Not able to load . Sorry!", e);
             return;
         }
 
@@ -76,6 +90,7 @@ public class App {
 
             while (!guess.equals("q")) {
                 if (guess.length() != 4 || !guess.matches(regex)) {
+                    logger.log(Level.WARNING, "{0}: is not a valid input", guess);
                     System.out.println("Input in invalid, try again");
                 }
                 else {                
