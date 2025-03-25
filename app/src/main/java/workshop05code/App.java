@@ -72,14 +72,19 @@ public class App {
         try (Scanner scanner = new Scanner(System.in)) {
             System.out.print("Enter a 4 letter word for a guess or q to quit: ");
             String guess = scanner.nextLine();
+            String regex = "[a-z]+";
 
             while (!guess.equals("q")) {
-                System.out.println("You've guessed '" + guess+"'.");
-
-                if (wordleDatabaseConnection.isValidWord(guess)) { 
-                    System.out.println("Success! It is in the the list.\n");
-                }else{
-                    System.out.println("Sorry. This word is NOT in the the list.\n");
+                if (guess.length() != 4 || !guess.matches(regex)) {
+                    System.out.println("Input in invalid, try again");
+                }
+                else {                
+                    System.out.println("You've guessed '" + guess+"'.");
+                    if (wordleDatabaseConnection.isValidWord(guess)) { 
+                        System.out.println("Success! It is in the the list.\n");
+                    }else{
+                        System.out.println("Sorry. This word is NOT in the the list.\n");
+                    }
                 }
 
                 System.out.print("Enter a 4 letter word for a guess or q to quit: " );
